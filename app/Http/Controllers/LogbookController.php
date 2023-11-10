@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreLogbookRequest;
+use App\Http\Requests\UpdateLogbookRequest;
 use App\Models\Logbook;
 use Illuminate\Http\Request;
 
@@ -54,15 +55,11 @@ class LogbookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Logbook $logbook)
+    public function update(UpdateLogbookRequest $request, Logbook $logbook)
     {
-        $request->validate([
-            'description' => 'required'
-        ]);
-
         $logbook->update($request->all());
 
-        return redirect()->route('logbooks.index')->with('success', 'Logbook berhasil diperbarui');
+        return redirect()->route('logbooks.show', $logbook->id)->with('update_success', 'Logbook berhasil diperbarui');
     }
 
     /**

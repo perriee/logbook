@@ -52,36 +52,20 @@
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="#">
-                    <div class="grid gap-4 mb-4 sm:grid-cols-2">
-                        <div>
-                            <label for="name"
-                                class="block mb-2 text-sm font-medium text-slate-300 dark:text-white">Deskripsi</label>
-                            <input type="text" name="name" id="name"
-                                class="bg-slate-700 text-gray-900 border-none placeholder-slate-400 text-sm rounded-lg block w-full p-2.5"
-                                placeholder="Ex. Apple iMac 27&ldquo;">
-                        </div>
-                        <div>
-                            <label for="brand"
-                                class="block mb-2 text-sm font-medium text-slate-300 dark:text-white">Tanggal</label>
-                            <input type="date" name="brand" id="brand"
-                                class="bg-slate-700 borde-none text-gray-900 text-sm rounded-lg block w-full p-2.5 placeholder-slate-400">
-                        </div>
+                <form action="{{ route('logbooks.update', $logbook->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label for="description"
+                            class="block mb-2 text-sm font-medium text-slate-300 dark:text-white">Deskripsi</label>
+                        <textarea id="description" name="description" rows="8"
+                            class="block focus:ring-0 border-none p-2.5 w-full text-base text-slate-300 bg-slate-700 rounded-lg placeholder-slate-400"
+                            placeholder="Bagaimana kegiatan kamu hari ini?">{{ $logbook->description }}</textarea>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button type="submit"
-                            class="text-white bg-sky-500 hover:bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            class="text-white bg-sky-500 hover:bg-sky-600 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                             Update
-                        </button>
-                        <button type="button"
-                            class="text-red-600 inline-flex items-center hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                            <svg class="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                    clip-rule="evenodd"></path>
-                            </svg>
-                            Delete
                         </button>
                     </div>
                 </form>
@@ -89,3 +73,33 @@
         </div>
     </div>
 @endsection
+
+@push('javascript')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            color: 'white',
+            iconColor: 'white',
+            customClass: {
+                popup: 'colored-toast',
+            },
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        })
+
+        @if ($message = Session::get('update_success'))
+            Toast.fire({
+                icon: 'success',
+                title: '{{ $message }}',
+                background: '#22c55e'
+            })
+        @endif
+    </script>
+@endpush
